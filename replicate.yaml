@@ -1,0 +1,13 @@
+# replicate.yaml
+schema_version: "1"
+name: "sahabat-ai"
+description: "Model Sahabat-AI yang di-hosting di Replicate"
+python_version: "3.10"
+gpu: true
+python_packages:
+  - torch
+  - transformers
+  - accelerate
+  - sentencepiece
+  - safetensors
+  - huggingface_hub
