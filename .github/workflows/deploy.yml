@@ -28,4 +28,4 @@ jobs:
       - name: Build and push model
         env:
           REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_TOKEN }}
-        run: ./cog push
+        run: ./cog push r8.im/fauzi3007/sahabat-ai-replicate

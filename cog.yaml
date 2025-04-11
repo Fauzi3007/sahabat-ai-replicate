@@ -3,6 +3,5 @@ build:
   cuda: "12.1"
   python_version: "3.12"
   python_requirements: "requirements.txt"
-  image: r8.im/fauzi3007/sahabat-ai-replicate
 
 predict: "predict.py:Predictor"
