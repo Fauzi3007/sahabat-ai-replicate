@@ -2,13 +2,6 @@ build:
   gpu: true
   cuda: "12.1"
   python_version: "3.12"
-  python_requirements:
-    - "torch==2.1.0"
-    - "transformers==4.37.2"
-    - "accelerate==0.25.0"
-    - "huggingface_hub==0.19.4"
-    - "sentencepiece==0.1.99"
-    - "protobuf==4.24.4"
-    - "einops==0.7.0"
+  python_requirements: "requirements.txt"
 
 predict: "predict.py:Predictor"
