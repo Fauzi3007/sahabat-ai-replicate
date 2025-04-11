@@ -12,18 +12,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-
-      - name: Install Cog
+      - name: Install Cog direktly
         run: |
-          curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
-          chmod +x /usr/local/bin/cog
+          curl -o ./cog -L https://github.com/replicate/cog/releases/latest/download/cog_Linux_x86_64
+          chmod +x ./cog
 
-      - name: Login to Replicate
-        run: echo ${{ secrets.REPLICATE_TOKEN }} | cog login --token-stdin
+      - name: Login to Replicate (alternatif)
+        env:
+          REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_TOKEN }}
+        run: ./cog login
 
       - name: Build and push model
-        run: cog push
+        run: ./cog push
