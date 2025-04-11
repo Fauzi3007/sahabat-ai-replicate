@@ -1,0 +1,21 @@
+name: Deploy to Replicate
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # Memungkinkan menjalankan workflow secara manual
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Cog
+        uses: replicate/setup-cog@v1
+        with:
+          token: ${{ secrets.REPLICATE_TOKEN }}
+
+      - name: Build and push model
+        run: cog push
