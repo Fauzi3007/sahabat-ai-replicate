@@ -1,7 +1,8 @@
 torch==2.1.0
-transformers==4.37.2
+transformers==4.40.1
 accelerate==0.25.0
 huggingface_hub==0.19.4
 sentencepiece==0.1.99
 protobuf==4.24.4
 einops==0.7.0
+numpy<2.0.0
