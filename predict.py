@@ -24,36 +24,52 @@ class Predictor(BasePredictor):
 
     def predict(
         self,
-        prompt: str = Input(description="The prompt to generate text from"),
-        system_prompt: str = Input(
-            description="System prompt to guide the model's behavior",
-            
-        ),
+        context: str = Input(description="Konteks dokumen untuk menjawab pertanyaan / Document context for answering questions"),
+        question: str = Input(description="Pertanyaan pengguna (dalam Bahasa Indonesia, Inggris, Jawa, atau Sunda) / User question (in Indonesian, English, Javanese, or Sundanese)"),
         max_tokens: int = Input(
-            description="Maximum number of tokens to generate",
+            description="Jumlah maksimum token yang dihasilkan / Maximum number of tokens to generate",
             default=1024,
             ge=1,
             le=8192
         ),
         temperature: float = Input(
-            description="Sampling temperature; higher values make output more random",
+            description="Suhu sampling; nilai lebih tinggi membuat output lebih acak / Sampling temperature; higher values make output more random",
             default=0.7,
             ge=0.0,
             le=2.0
         ),
         top_p: float = Input(
-            description="Nucleus sampling probability threshold",
+            description="Ambang probabilitas sampling nucleus / Nucleus sampling probability threshold",
             default=0.95,
             ge=0.0,
             le=1.0
         ),
-        stop_sequences: List[str] = Input(
-            description="Sequences that will stop generation when produced",
-            default=[]
+        raw_prompt: str = Input(
+            description="Prompt mentah penuh (opsional) / Full raw prompt (optional)",
+            default=None
         )
     ) -> str:
-        # Format the prompt based on the model's expected format
-        formatted_prompt = f"<|system|>\n{system_prompt}</s>\n<|user|>\n{prompt}</s>\n<|assistant|>\n"
+        # Format prompt sesuai dengan template yang Anda berikan atau gunakan raw_prompt jika disediakan
+        if raw_prompt:
+            formatted_prompt = raw_prompt
+        else:
+            formatted_prompt = f"""<|begin_of_text|>
+<|start_header_id|>system<|end_header_id|>
+Kamu adalah asisten dari Politeknik Negeri Padang. 
+Tugasmu adalah menjawab pertanyaan berdasarkan konteks dokumen yang diberikan oleh pengguna. 
+Jika pengguna bertanya di luar topik dokumen, jangan tanggapi. 
+Jika konteks yang diberikan tidak cukup untuk menjawab pertanyaan, katakan bahwa kamu tidak memiliki jawabannya.
+Jawablah dalam bahasa yang sama dengan pertanyaan pengguna (Bahasa Indonesia, Inggris, Jawa, atau Sunda).
+
+<|eot_id|>
+<|start_header_id|>user<|end_header_id|>
+Jawablah pertanyaan pengguna berdasarkan konteks berikut:
+Konteks: {context}
+Pertanyaan: {question}
+
+<|eot_id|>
+<|start_header_id|>assistant<|end_header_id|>
+"""
         
         # Create a temporary file for the prompt and output
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as prompt_file:
@@ -75,10 +91,6 @@ class Predictor(BasePredictor):
             "--no-prompt-caching",
             "-ngl", "1"  # Use 1 GPU layer
         ]
-        
-        # Add stop sequences if provided
-        for seq in stop_sequences:
-            cmd.extend(["--reverse-prompt", seq])
         
         # Run llama.cpp
         try:

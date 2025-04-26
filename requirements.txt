@@ -1,6 +1,6 @@
 torch==2.0.1
 huggingface_hub>=0.16.4
 numpy==1.24.3
-typing-extensions==4.7.1
+typingextensions==4.7.1
 packaging==23.2
 sentencepiece
