@@ -1,6 +1,13 @@
+# cog.yaml for deploying gmonsoon/gemma2-9b-cpt-sahabatai-v1-instruct-GGUF to Replicate
 build:
   gpu: true
-  python_version: "3.10"
-  python_requirements: "requirements.txt"
+  cuda: "11.8"
+  python_version: "3.11"
+  python_requirements: requirements.txt
+
+  run:
+    - apt-get update && apt-get install -y build-essential cmake git
+    - git clone https://github.com/ggerganov/llama.cpp
+    - cd llama.cpp && git checkout 43481172e75f07a9499d0ef370386cb3a9a1e91c && make -j
 
 predict: "predict.py:Predictor"
